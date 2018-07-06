@@ -62,7 +62,7 @@ public class Main {
         printHaeder();
         List<Integer> serverIds = new ArrayList<>();
         File log = new File("speedtest-log.csv");
-        long interval = /*36000000L*/1000 * 60;
+        long interval = 36000000L;
         char delimiter = ';';
         for (String arg : args) {
             Matcher m1 = Pattern.compile("-*timeout:(\\d+)").matcher(arg);
