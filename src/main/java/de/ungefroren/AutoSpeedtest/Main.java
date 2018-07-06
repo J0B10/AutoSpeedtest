@@ -33,8 +33,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
@@ -46,6 +46,11 @@ import java.util.regex.Pattern;
  * @author Jonas Blocher
  */
 public class Main {
+
+    private static List<Integer> serverIds = new ArrayList<>();
+    private static File log = new File("speedtest-log.csv");
+    private static long interval = 3600000L;
+    private static char delimiter = ';';
 
     private static void printHaeder() {
         try {
@@ -60,10 +65,6 @@ public class Main {
 
     public static void main(String[] args) {
         printHaeder();
-        List<Integer> serverIds = new ArrayList<>();
-        File log = new File("speedtest-log.csv");
-        long interval = 36000000L;
-        char delimiter = ';';
         for (String arg : args) {
             Matcher m1 = Pattern.compile("-*timeout:(\\d+)").matcher(arg);
             Matcher m2 = Pattern.compile("-*servers:(\\d+(,\\d+)?)").matcher(arg);
@@ -115,47 +116,35 @@ public class Main {
             }
         }
         Timer mainTimer = new Timer("Clock");
-        if (serverIds.isEmpty()) {
-            final File finalLog = log;
-            Speedtest speedtest = new Speedtest(Optional.empty());
-            char finalDelimiter = delimiter;
-            mainTimer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        System.out.println("Running speedtest...");
-                        speedtest.run();
-                        BufferedWriter bw = new BufferedWriter(new FileWriter(finalLog, true));
-                        bw.newLine();
-                        bw.write(speedtest.valuesAsCsv(finalDelimiter));
-                        bw.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, 2, interval);
-        } else {
-            for (int id : serverIds) {
-                final File finalLog = log;
-                Speedtest speedtest = new Speedtest(Optional.empty());
-                char finalDelimiter = delimiter;
-                mainTimer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            System.out.println("Running speedtest...");
-                            speedtest.run();
-                            BufferedWriter bw = new BufferedWriter(new FileWriter(finalLog, true));
-                            bw.newLine();
-                            bw.write(speedtest.valuesAsCsv(finalDelimiter));
-                            bw.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 2, interval);
+        mainTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runAllSpeedtests();
+            }
+        }, 2, interval);
+        System.out.println("Running Speedtest every " + interval / 1000 + " seconds.\n");
+    }
+
+
+    private static void runAllSpeedtests() {
+        final boolean empty = serverIds.isEmpty();
+        Iterator<Integer> i = serverIds.iterator();
+        while (empty || i.hasNext()) {
+            try {
+                int next = empty ? 0 : i.next();
+                if (empty) System.out.println("Running speedtest...");
+                else System.out.println("Running speedtest #" + next + "...");
+                Speedtest speedtest = empty ? new Speedtest() : new Speedtest(next);
+                speedtest.run();
+                BufferedWriter bw = new BufferedWriter(new FileWriter(log, true));
+                bw.newLine();
+                bw.write(speedtest.valuesAsCsv(delimiter));
+                bw.close();
+                if (empty) return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (empty) return;
             }
         }
-        System.out.println("Running Speedtest every " + interval / 1000 + " seconds.\n");
     }
 }
