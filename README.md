@@ -19,7 +19,7 @@ so I created this small command line tool to do automated speedtests and log the
 
 The tool uses [speedtest-cli by sivel](https://github.com/sivel/speedtest-cli) to do the actual speedtests.
 
-[**-> Zur deutschen Anleitung**]()
+[**-> Zur deutschen Anleitung**](https://github.com/joblo2213/AutoSpeedtest/wiki/de)
 
 ## Prerequisites
 To run this program you need to have Python and Java installed on your computer.
