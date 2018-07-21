@@ -164,12 +164,6 @@ public class Main {
                 runAllSpeedtests();
             }
         }, 2, interval);
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                runAllSpeedtests();
-            }
-        };
 
         //notify
         System.out.println("Running Speedtest every " + interval / 1000 + " seconds.\n");
