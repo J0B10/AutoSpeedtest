@@ -36,6 +36,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 /**
+ * Class representing a speedtest that can be run and whose results can be logged
+ * <p>
  * Created on 05.07.2018.
  *
  * @author Jonas Blocher
@@ -45,7 +47,7 @@ public class Speedtest implements Runnable {
     private static final String COMMAND = "speedtest-cli --json --server %d --secure --timeout %d";
     private static final String COMMAND_UNSPECIFIC_SERVER = "speedtest-cli --json --secure --timeout %d";
 
-    static int TIMEOUT = 10;
+    static int TIMEOUT = Main.DEFAULT_TIMEOUT;
 
 
     /**
