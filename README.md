@@ -92,7 +92,7 @@ Of course you have to replace the square brackets with your values
 
 ## Evaluating results in [Microsoft Excel](https://products.office.com/en-us/excel)
 
-You can use the template [results.xltx](https://github.com/joblo2213/AutoSpeedtest/blob/master/results.xltx?raw=true) to evaluate your resluts and display nice graphs.  
+You can use the template [results.xltx](https://github.com/joblo2213/AutoSpeedtest/raw/master/resutls.xltx) to evaluate your resluts and display nice graphs.  
 Just download the template and open it.
 
 **On opening you will get informed about a data source error which is intentionally, you can just ignore it.**
